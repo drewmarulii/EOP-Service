@@ -54,6 +54,6 @@ public class UserPerson extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
-    private User parentId;
+    private User parent;
 
 }

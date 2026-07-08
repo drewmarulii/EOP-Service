@@ -7,6 +7,7 @@ import com.eop.baseservice.common.dto.user.response.UserResponse;
 import com.eop.baseservice.common.response.PagingRequest;
 import com.eop.userservice.entity.User;
 import com.eop.userservice.repository.UserRepository;
+import com.eop.userservice.service.UserPersonService;
 import com.eop.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final UserPersonService userPersonService;
 
     @Override
     public void validateIdExists(String id) {
@@ -87,6 +89,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(request.getRole());
         user.setStatus(UserStatus.NEED_APPROVAL);
         userRepository.save(user);
+        userPersonService.create(request.getUserPersonRequest(), user);
     }
 
     @Override
