@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+        /* <![CDATA[ */
+        @page {
+            size: 210mm 373mm;
+            margin: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 210mm;
+            min-height: 373mm;
+            font-family: Arial, sans-serif;
+            background: #fdfbfc;
+            color: #1e293b;
+            -webkit-print-color-adjust: exact;
+        }
+
+        /* =========================
+           CONTAINER & BORDER ELEGAN
+        ========================== */
+        .poster {
+            width: 210mm;
+            min-height: 373mm;
+            padding: 18mm 18mm 20mm 18mm;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .outer-border {
+            position: absolute;
+            top: 8mm;
+            bottom: 8mm;
+            left: 8mm;
+            right: 8mm;
+            border: 1px solid #e2e8f0;
+            border-top: 6px solid #006837;
+            pointer-events: none;
+        }
+
+        /* =========================
+           HEADER TOP
+        ========================== */
+        .header-container {
+            text-align: center;
+            margin-bottom: 10mm;
+            width: 100%;
+        }
+
+        .sda-logo {
+            width: 75px;
+            height: auto;
+        }
+
+        .church-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #64748b;
+            margin: 0 0 6px 0;
+        }
+
+        .main-title {
+            font-size: 40px;
+            font-weight: 900;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 6px 0;
+        }
+
+        .date-badge {
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* =========================
+           NATIVE TABLE LAYOUT (ANTI-BUG)
+        ========================== */
+        .liturgy-container {
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .liturgy-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .liturgy-row {
+            page-break-inside: avoid;
+        }
+
+        .liturgy-row:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .cell-content {
+            padding: 9px 10px;
+            vertical-align: top;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .col-number {
+            width: 35px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #c19a29;
+            text-align: left;
+        }
+
+        .col-sequence {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            word-wrap: break-word;
+        }
+
+        .col-person {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #006837;
+            text-align: right;
+            word-wrap: break-word;
+        }
+
+        .highlight-sermon {
+            background-color: #fef9c3 !important;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+        .footer-container {
+            position: absolute;
+            bottom: 14mm;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        /* ]]> */
+    </style>
+</head>
+
+<body>
+
+<div class="poster">
+    <div class="outer-border"></div>
+
+    <div class="header-container">
+        <div style="text-align: center; margin-bottom: 12px;">
+            <img th:src="${logoPath}" class="sda-logo" alt="Logo GMAHK" />
+        </div>
+        <div class="church-title" th:text="${churchName}">GMAHK TANGERANG PALEM SEMI</div>
+        <h1 class="main-title" th:text="${eventTitle}">SABBATH WORSHIP SERVICE</h1>
+        <div class="date-badge" th:text="${eventDate}">Sabat, 13/06/2026 (Jam 10.30 - 13.00)</div>
+    </div>
+
+    <div class="liturgy-container">
+        <table class="liturgy-table">
+            <tbody>
+            <tr class="liturgy-row" th:each="item, stat : ${liturgyList}" th:classappend="${#strings.contains(#strings.toLowerCase(item.key), 'sermon') || #strings.contains(#strings.toLowerCase(item.key), 'khotbah')} ? 'highlight-sermon' : ''">
+                <td class="cell-content col-number" th:text="${stat.count}">1</td>
+                <td class="cell-content col-sequence" th:text="${item.key}">Opening Praise and Worship</td>
+                <td class="cell-content col-person" th:text="${item.value}">Worship Team</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer-container">
+        <div class="footer-text">
+            Selamat Melayani dan Selamat Berbakti • Tuhan Yesus Memberkati
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
