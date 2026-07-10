@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ import java.time.ZonedDateTime;
 @Entity
 @Table(name = "cor_user_persons")
 @Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE cor_user_persons SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? AND version = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPerson extends BaseEntity {
@@ -54,6 +56,6 @@ public class UserPerson extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
-    private User parent;
+    private UserPerson parent;
 
 }

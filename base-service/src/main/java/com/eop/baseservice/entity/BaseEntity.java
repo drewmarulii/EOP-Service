@@ -31,6 +31,7 @@ public abstract class BaseEntity {
     @Column(name = "deleted_at")
     private ZonedDateTime deletedAt;
 
+    @Version
     @Column(name = "version")
     private Long version;
 

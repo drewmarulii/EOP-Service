@@ -38,8 +38,7 @@ public class UserPersonController {
         return ResponseEntity.ok(ResponseHelper.ok("User Profile has been updated successfully"));
     }
 
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WebResponse<String>> deleteById(@PathVariable String id) {
         userPersonService.delete(id);
         return ResponseEntity.ok(ResponseHelper.ok("User Profile has been deleted"));

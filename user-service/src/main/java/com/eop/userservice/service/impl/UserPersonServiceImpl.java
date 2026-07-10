@@ -1,5 +1,6 @@
 package com.eop.userservice.service.impl;
 
+import com.eop.baseservice.common.constant.MaritalStatus;
 import com.eop.baseservice.common.dto.user.request.CreateUserPersonRequest;
 import com.eop.baseservice.common.dto.user.request.UpdateUserPersonRequest;
 import com.eop.baseservice.common.dto.user.response.UserPersonResponse;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,7 +46,7 @@ public class UserPersonServiceImpl implements UserPersonService {
 
     @Override
     public void validateBkNotExists(String nik) {
-        if (!userPersonRepository.existsByNik(nik)) {
+        if (userPersonRepository.existsByNik(nik)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Profile Can't be Created, Data Invalid");
         }
     }
@@ -86,9 +88,12 @@ public class UserPersonServiceImpl implements UserPersonService {
         userPerson.setUser(user);
 
         if (StringUtils.isNotBlank(request.getParentId())) {
-            User parent = userService.getEntityById(request.getParentId());
-            userPerson.setParent(parent);
+            userPerson.setParent(getEntityById(request.getParentId()));
+        } else {
+            userPerson.setParent(null);
         }
+
+        userPerson.setMaritalStatus(MaritalStatus.valueOf(request.getMaritalStatus()));
 
         userPersonRepository.save(userPerson);
     }
@@ -99,16 +104,18 @@ public class UserPersonServiceImpl implements UserPersonService {
         validateIdExists(request.getId());
 
         UserPerson userPerson = getEntityById(request.getId());
+        validateVersion(userPerson.getVersion(), request.getVersion());
+
         if (!userPerson.getNik().equalsIgnoreCase(request.getNik())) {
             validateBkNotExists(request.getNik());
         }
 
         BeanUtils.copyProperties(request, userPerson);
-        validateVersion(userPerson.getVersion(), request.getVersion());
 
         if (StringUtils.isNotBlank(request.getParentId())) {
-            User parent = userService.getEntityById(request.getParentId());
-            userPerson.setParent(parent);
+            userPerson.setParent(getEntityById(request.getParentId()));
+        } else {
+            userPerson.setParent(null);
         }
     }
 
@@ -131,13 +138,16 @@ public class UserPersonServiceImpl implements UserPersonService {
         UserPersonResponse response = new UserPersonResponse();
         BeanUtils.copyProperties(userPerson, response);
 
-        User parent = userPerson.getParent();
-        response.setParentId(parent.getId());
-        response.setParentUid(parent.getUid());
+        if (Objects.nonNull(userPerson.getParent())) {
+            User parent = userPerson.getParent().getUser();
+            response.setParentId(parent.getId());
+            response.setParentUid(parent.getUid());
 
-        UserPerson parentProfile = userPersonRepository.findByParentId(parent.getId());
-        response.setParentProfileId(parentProfile.getId());
-        response.setParentFullName(parentProfile.getFullName());
+            UserPerson parentProfile = userPersonRepository.findByParentId(parent.getId());
+            response.setParentProfileId(parentProfile.getId());
+            response.setParentFullName(parentProfile.getFullName());
+        }
+
         return response;
     }
 }

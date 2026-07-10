@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.Where;
@@ -27,6 +28,7 @@ import java.util.Map;
 @Entity
 @Table(name = "cor_events")
 @Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE cor_events SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? AND version = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Event extends BaseEntity {

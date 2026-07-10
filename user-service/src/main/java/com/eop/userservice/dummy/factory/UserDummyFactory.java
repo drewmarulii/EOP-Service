@@ -30,7 +30,7 @@ public class UserDummyFactory {
         return setAudit(user);
     }
 
-    public UserPerson createPerson(User user, String nik, String fullName, MaritalStatus maritalStatus, User parent) {
+    public UserPerson createPerson(User user, String nik, String fullName, MaritalStatus maritalStatus, UserPerson parent) {
         UserPerson userPerson = new UserPerson();
         userPerson.setUser(user);
         userPerson.setNik(nik);
