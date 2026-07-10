@@ -41,7 +41,7 @@ public class UserDummyFactory {
         userPerson.setPlaceOfBirth("Tangerang");
         userPerson.setDateOfBirth(LocalDate.of(1982, 5, 10));
         userPerson.setMaritalStatus(maritalStatus);
-        userPerson.setParentId(parent);
+        userPerson.setParent(parent);
         return setAudit(userPerson);
     }
 

@@ -13,6 +13,8 @@ import com.eop.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +30,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserPersonServiceImpl implements UserPersonService {
 
-    private final UserService userService;
+    @Autowired
+    @Lazy
+    private UserService userService;
     private final UserPersonRepository userPersonRepository;
 
     @Override
