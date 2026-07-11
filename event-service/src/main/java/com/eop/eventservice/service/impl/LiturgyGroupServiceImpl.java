@@ -1,11 +1,14 @@
 package com.eop.eventservice.service.impl;
 
+import com.eop.baseservice.common.MyInfoResponse;
+import com.eop.baseservice.common.constant.UserRole;
 import com.eop.baseservice.common.dto.liturgy.request.CreateLiturgyGroupRequest;
 import com.eop.baseservice.common.dto.liturgy.request.CreateLiturgySequenceRequest;
 import com.eop.baseservice.common.dto.liturgy.request.UpdateLiturgyGroupRequest;
 import com.eop.baseservice.common.dto.liturgy.response.LiturgyGroupResponse;
 import com.eop.baseservice.common.response.PagingRequest;
 import com.eop.eventservice.entity.LiturgyGroup;
+import com.eop.eventservice.feign.UserServiceClient;
 import com.eop.eventservice.repository.LiturgyGroupRepository;
 import com.eop.eventservice.service.LiturgyGroupService;
 import com.eop.eventservice.service.LiturgySequenceService;
@@ -27,6 +30,7 @@ public class LiturgyGroupServiceImpl implements LiturgyGroupService {
 
     private final LiturgyGroupRepository liturgyGroupRepository;
     private final LiturgySequenceService liturgySequenceService;
+    private final UserServiceClient userServiceClient;
 
     @Override
     public void validateIdExists(String id) {
@@ -79,12 +83,19 @@ public class LiturgyGroupServiceImpl implements LiturgyGroupService {
     @Override
     @Transactional
     public void create(CreateLiturgyGroupRequest request) {
+        MyInfoResponse myInfo = getMyInfo();
+        if (!UserRole.ADMIN.toString().equalsIgnoreCase(myInfo.getUserRole())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Liturgy Group can't be created. Contact Admin!");
+        }
+
         validateBkNotExists(request.getCode());
 
         LiturgyGroup liturgyGroup = new LiturgyGroup();
         liturgyGroup.setCode(request.getCode());
         liturgyGroup.setName(request.getName());
         liturgyGroup.setDescription(request.getDescription());
+        liturgyGroup.setCreatedBy(myInfo.getUid());
+        liturgyGroup.setUpdatedBy(myInfo.getUid());
         liturgyGroupRepository.save(liturgyGroup);
 
         for (CreateLiturgySequenceRequest sequenceRequest : request.getLiturgySequenceRequests()) {
@@ -93,7 +104,13 @@ public class LiturgyGroupServiceImpl implements LiturgyGroupService {
     }
 
     @Override
+    @Transactional
     public void update(UpdateLiturgyGroupRequest request) {
+        MyInfoResponse myInfo = getMyInfo();
+        if (!UserRole.ADMIN.toString().equalsIgnoreCase(myInfo.getUserRole())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Liturgy Group can't be created. Contact Admin!");
+        }
+
         validateIdExists(request.getId());
 
         LiturgyGroup liturgyGroup = getEntityById(request.getId());
@@ -103,10 +120,12 @@ public class LiturgyGroupServiceImpl implements LiturgyGroupService {
         liturgyGroup.setCode(request.getCode());
         liturgyGroup.setName(request.getName());
         liturgyGroup.setDescription(request.getDescription());
+        liturgyGroup.setUpdatedBy(myInfo.getUid());
         liturgyGroupRepository.saveAndFlush(liturgyGroup);
     }
 
     @Override
+    @Transactional
     public void delete(String id) {
         LiturgyGroup liturgyGroup = getEntityById(id);
         liturgyGroupRepository.delete(liturgyGroup);
@@ -126,5 +145,9 @@ public class LiturgyGroupServiceImpl implements LiturgyGroupService {
         response.setName(liturgyGroup.getName());
         response.setVersion(liturgyGroup.getVersion());
         return response;
+    }
+
+    private MyInfoResponse getMyInfo() {
+        return userServiceClient.myInfo();
     }
 }

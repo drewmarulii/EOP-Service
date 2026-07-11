@@ -2,6 +2,7 @@ package com.eop.eventservice.service;
 
 import com.eop.baseservice.common.dto.event.request.CreateEventRequest;
 import com.eop.baseservice.common.dto.event.request.UpdateEventRequest;
+import com.eop.baseservice.common.dto.event.response.EventParticipantResponse;
 import com.eop.baseservice.common.dto.event.response.EventResponse;
 import com.eop.baseservice.common.response.PagingRequest;
 import com.eop.eventservice.entity.Event;
@@ -20,6 +21,8 @@ public interface EventService {
     EventResponse getById(String id);
 
     Page<EventResponse> getAllByPagingAndSearch(PagingRequest pagingRequest, String inquiry);
+
+    List<EventParticipantResponse> getAllEventParticipant(String inquiry, String eventId);
 
     void create(CreateEventRequest request);
 
