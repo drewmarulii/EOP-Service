@@ -20,4 +20,7 @@ public class CreateUserRequest {
 
     @NotBlank
     private UserRole role;
+
+    private CreateUserPersonRequest userPersonRequest;
+
 }

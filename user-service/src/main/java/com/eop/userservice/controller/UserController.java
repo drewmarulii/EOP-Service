@@ -46,8 +46,7 @@ public class UserController {
         return ResponseEntity.ok(ResponseHelper.ok("User has been updated successfully"));
     }
 
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WebResponse<String>> deleteById(@PathVariable String id) {
         userService.delete(id);
         return ResponseEntity.ok(ResponseHelper.ok("User has been deleted"));

@@ -7,6 +7,7 @@ import com.eop.baseservice.common.dto.user.response.UserResponse;
 import com.eop.baseservice.common.response.PagingRequest;
 import com.eop.userservice.entity.User;
 import com.eop.userservice.repository.UserRepository;
+import com.eop.userservice.service.UserPersonService;
 import com.eop.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final UserPersonService userPersonService;
 
     @Override
     public void validateIdExists(String id) {
@@ -87,6 +90,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(request.getRole());
         user.setStatus(UserStatus.NEED_APPROVAL);
         userRepository.save(user);
+        userPersonService.create(request.getUserPersonRequest(), user);
     }
 
     @Override

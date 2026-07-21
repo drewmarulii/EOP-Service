@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "cor_liturgy_groups")
 @Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE cor_liturgy_groups SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? AND version = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 public class LiturgyGroup extends BaseEntity {
