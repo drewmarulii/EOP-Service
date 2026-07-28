@@ -4,8 +4,8 @@ import com.eop.baseservice.common.constant.MaritalStatus;
 import com.eop.baseservice.common.dto.user.request.CreateUserPersonRequest;
 import com.eop.baseservice.common.dto.user.request.UpdateUserPersonRequest;
 import com.eop.baseservice.common.dto.user.response.UserPersonResponse;
-import com.eop.baseservice.common.dto.user.response.UserResponse;
 import com.eop.baseservice.common.response.PagingRequest;
+import com.eop.baseservice.helper.SpecificationHelper;
 import com.eop.userservice.entity.User;
 import com.eop.userservice.entity.UserPerson;
 import com.eop.userservice.repository.UserPersonRepository;
@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,8 +73,10 @@ public class UserPersonServiceImpl implements UserPersonService {
 
     @Override
     public Page<UserPersonResponse> getAllByPagingAndSearch(PagingRequest pagingRequest, String inquiry) {
-        PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getPageSize());
-        Page<UserPerson> pages = userPersonRepository.findAll(pageRequest);
+        PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getPageSize(),
+                SpecificationHelper.createSort(UserPerson.class, pagingRequest.getSortBy()));
+        Specification<UserPerson> spec = SpecificationHelper.filter(inquiry, null, "nik", "fullName", "address", "mobilePhone", "email");
+        Page<UserPerson> pages = userPersonRepository.findAll(spec, pageRequest);
         List<UserPersonResponse> responses = pages.getContent().stream().map(this::mappingUserPersonDto).collect(Collectors.toList());
         return new PageImpl<>(responses, pageRequest, pages.getTotalElements());
     }
