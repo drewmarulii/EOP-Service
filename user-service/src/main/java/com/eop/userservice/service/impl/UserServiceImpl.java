@@ -8,7 +8,6 @@ import com.eop.baseservice.common.dto.user.request.UpdateUserRequest;
 import com.eop.baseservice.common.dto.user.response.UserResponse;
 import com.eop.baseservice.common.response.PagingRequest;
 import com.eop.baseservice.config.EopProperties;
-import com.eop.baseservice.entity.EopConfig;
 import com.eop.userservice.entity.User;
 import com.eop.userservice.repository.UserRepository;
 import com.eop.userservice.service.UserPersonService;
@@ -23,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
