@@ -11,9 +11,11 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class UserResponse {
     private String id;
-    private String uid;
+    private String churchName;
+    private String username;
     private String role;
     private String status;
     private ZonedDateTime lastLoginInfo;
+    private Boolean isActive;
     private Long version;
 }

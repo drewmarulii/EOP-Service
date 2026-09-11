@@ -5,7 +5,7 @@ spring:
   application:
     name: attendance-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/eop
+    url: jdbc:postgresql://localhost:5432/eop-v
     username: postgres
     password: root
   jpa:
@@ -14,6 +14,7 @@ spring:
     properties:
       hibernate:
         default_schema: public
+      show-sql: true
 
 eureka:
   client:

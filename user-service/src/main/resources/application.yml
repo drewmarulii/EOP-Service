@@ -5,12 +5,13 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/eop
+    url: jdbc:postgresql://localhost:5432/eop-v
     username: postgres
     password: root
   jpa:
     hibernate:
       ddl-auto: validate
+    show-sql: true
     properties:
       hibernate:
         default_schema: public
@@ -23,3 +24,21 @@ eureka:
 jwt:
   secret: nLyOtmxLgpwm2mwAGofAZLwWcAqxVX7/yBNLshXfgHk=
   expiration: 3600000
+
+eop:
+  church:
+    name: "..."
+    code: "..."
+    address: "..."
+    phone: "..."
+    email: "..."
+    website: "..."
+    conference: "..."
+    union: "..."
+    division: "..."
+    logo-path: "..."
+
+  locale:
+    timezone: Asia/Jakarta
+    language: id
+    currency: IDR

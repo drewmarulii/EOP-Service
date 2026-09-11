@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EventResponse {
+public class WorshipTypeResponse {
 
     private String id;
     private String liturgyGroupId;
@@ -22,8 +22,6 @@ public class EventResponse {
     private LocalDateTime eventStartTime;
     private LocalDateTime eventEndTime;
     private String eventType;
-
-    private List<EventParticipantResponse> eventParticipantResponses;
     private Long version;
 
 }

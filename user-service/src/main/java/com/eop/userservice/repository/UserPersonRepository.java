@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserPersonRepository extends JpaRepository<UserPerson, String>, JpaSpecificationExecutor<UserPerson> {
 
-    UserPerson findByParentId(@Param("parentId") String parentId);
-
-    boolean existsByNik(String nik);
+    boolean existsByUserId(String nik);
 
 }

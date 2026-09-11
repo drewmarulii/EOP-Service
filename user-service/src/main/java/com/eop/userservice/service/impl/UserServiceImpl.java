@@ -1,10 +1,13 @@
 package com.eop.userservice.service.impl;
 
+import com.eop.baseservice.common.constant.UserRole;
 import com.eop.baseservice.common.constant.UserStatus;
 import com.eop.baseservice.common.dto.user.request.CreateUserRequest;
+import com.eop.baseservice.common.dto.user.request.UpdateUserPasswordRequest;
 import com.eop.baseservice.common.dto.user.request.UpdateUserRequest;
 import com.eop.baseservice.common.dto.user.response.UserResponse;
 import com.eop.baseservice.common.response.PagingRequest;
+import com.eop.baseservice.config.EopProperties;
 import com.eop.userservice.entity.User;
 import com.eop.userservice.repository.UserRepository;
 import com.eop.userservice.service.UserPersonService;
@@ -19,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserPersonService userPersonService;
+    private final EopProperties eopConfig;
 
     @Override
     public void validateIdExists(String id) {
@@ -39,16 +42,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void validateBkNotExists(String uid) {
-        if (userRepository.existsByUid(uid)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UID found! please use other uid");
+    public void validateBkNotExists(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username found! please use other");
         }
     }
 
     @Override
-    public void validateBkNotChange(String oldUid, String currUid) {
-        if (!oldUid.equalsIgnoreCase(currUid)) {
-            validateBkNotExists(currUid);
+    public void validateBkNotChange(String oldUsername, String currUsername) {
+        if (!oldUsername.equalsIgnoreCase(currUsername)) {
+            validateBkNotExists(currUsername);
         }
     }
 
@@ -82,15 +85,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void create(CreateUserRequest request) {
-        validateBkNotExists(request.getUid());
+        validateBkNotExists(request.getUsername());
 
         User user = new User();
-        user.setUid(request.getUid());
+
+        user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole());
         user.setStatus(UserStatus.NEED_APPROVAL);
         userRepository.save(user);
-        userPersonService.create(request.getUserPersonRequest(), user);
+
+        if (!UserRole.ADMIN.equals(request.getRole()) && request.getUserPersonRequest() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please Complete User Profile!");
+        } else if (request.getUserPersonRequest() != null) {
+            userPersonService.create(request.getUserPersonRequest(), user);
+        }
     }
 
     @Override
@@ -99,14 +108,25 @@ public class UserServiceImpl implements UserService {
         validateIdExists(request.getId());
 
         User user = getEntityById(request.getId());
-        validateBkNotChange(user.getUid(), request.getUid());
+
+        validateBkNotChange(user.getUsername(), request.getUsername());
+        validateVersion(user.getVersion(), request.getVersion());
+
+        user.setUsername(request.getUsername());
+        user.setRole(request.getRole());
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(UpdateUserPasswordRequest request) {
+        validateIdExists(request.getId());
+
+        User user = getEntityById(request.getId());
+
         validateVersion(user.getVersion(), request.getVersion());
         validatePassword(user.getPassword(), request.getCurrPassword(), request.getNewPassword(), request.getConfPassword());
-
-        user.setUid(request.getUid());
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        user.setRole(request.getRole());
-        user.setStatus(UserStatus.NEED_APPROVAL);
         userRepository.saveAndFlush(user);
     }
 
@@ -158,10 +178,12 @@ public class UserServiceImpl implements UserService {
     private UserResponse mappingUserDto(User user) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
-        response.setUid(user.getUid());
+        response.setChurchName(eopConfig.getChurch().getName());
+        response.setUsername(user.getUsername());
         response.setRole(String.valueOf(user.getRole()));
         response.setStatus(user.getStatus().toString());
         response.setLastLoginInfo(user.getLastLoginInfo());
+        response.setIsActive(user.getIsActive());
         response.setVersion(user.getVersion());
         return response;
     }

@@ -15,7 +15,7 @@ public interface UserPersonService {
 
     void validateIdExists(String id);
 
-    void validateBkNotExists(String nik);
+    void validateBkNotExists(String userId);
 
     void validateVersion(Long oldVersion, Long currVersion);
 

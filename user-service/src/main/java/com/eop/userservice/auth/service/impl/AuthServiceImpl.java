@@ -20,7 +20,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        User user = userRepository.findByUid(loginRequest.getUid())
+        User user = userRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
 
         return new LoginResponse(
             token,
-            user.getUid(),
+            user.getUsername(),
             user.getRole().toString()
         );
     }

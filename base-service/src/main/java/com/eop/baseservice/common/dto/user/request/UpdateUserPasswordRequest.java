@@ -11,11 +11,15 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UpdateUserRequest extends BaseUpdateDto {
+public class UpdateUserPasswordRequest extends BaseUpdateDto {
 
     @NotBlank
-    private String username;
+    private String currPassword;
 
     @NotBlank
-    private UserRole role;
+    private String newPassword;
+
+    @NotBlank
+    private String confPassword;
+
 }
