@@ -21,7 +21,7 @@ public class UserDummyFactory {
 
     public User create(String uid, UserRole role, UserStatus status) {
         User user = new User();
-        user.setUid(uid);
+        user.setUsername(uid);
         user.setPassword(
             passwordEncoder.encode("password123")
         );
@@ -33,15 +33,13 @@ public class UserDummyFactory {
     public UserPerson createPerson(User user, String nik, String fullName, MaritalStatus maritalStatus, UserPerson parent) {
         UserPerson userPerson = new UserPerson();
         userPerson.setUser(user);
-        userPerson.setNik(nik);
         userPerson.setFullName(fullName);
         userPerson.setAddress("JL. Tangerang Indonesia 5-7, Tangerang");
         userPerson.setMobilePhone("081234567890");
-        userPerson.setEmail(user.getUid() + "@email.com");
+        userPerson.setEmail(user.getUsername() + "@email.com");
         userPerson.setPlaceOfBirth("Tangerang");
         userPerson.setDateOfBirth(LocalDate.of(1982, 5, 10));
         userPerson.setMaritalStatus(maritalStatus);
-        userPerson.setParent(parent);
         return setAudit(userPerson);
     }
 

@@ -1,9 +1,11 @@
 package com.eop.userservice.service.impl;
 
+import com.eop.baseservice.common.constant.Gender;
 import com.eop.baseservice.common.constant.MaritalStatus;
 import com.eop.baseservice.common.dto.user.request.CreateUserPersonRequest;
 import com.eop.baseservice.common.dto.user.request.UpdateUserPersonRequest;
 import com.eop.baseservice.common.dto.user.response.UserPersonResponse;
+import com.eop.baseservice.common.dto.user.response.UserResponse;
 import com.eop.baseservice.common.response.PagingRequest;
 import com.eop.baseservice.helper.SpecificationHelper;
 import com.eop.userservice.entity.User;
@@ -46,8 +48,8 @@ public class UserPersonServiceImpl implements UserPersonService {
     }
 
     @Override
-    public void validateBkNotExists(String nik) {
-        if (userPersonRepository.existsByNik(nik)) {
+    public void validateBkNotExists(String userId) {
+        if (userPersonRepository.existsByUserId(userId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Profile Can't be Created, Data Invalid");
         }
     }
@@ -84,19 +86,29 @@ public class UserPersonServiceImpl implements UserPersonService {
     @Override
     @Transactional
     public void create(CreateUserPersonRequest request, User user) {
-        validateBkNotExists(request.getNik());
+        validateBkNotExists(user.getId());
 
         UserPerson userPerson = new UserPerson();
         BeanUtils.copyProperties(request, userPerson);
         userPerson.setUser(user);
+        userPerson.setGender(request.getGender());
+        userPerson.setMaritalStatus(request.getMaritalStatus());
 
-        if (StringUtils.isNotBlank(request.getParentId())) {
-            userPerson.setParent(getEntityById(request.getParentId()));
-        } else {
-            userPerson.setParent(null);
+        if (MaritalStatus.MARRIED.equals(request.getMaritalStatus())) {
+            if (request.getMarriedDate() != null) {
+                userPerson.setMarriedDate(request.getMarriedDate());
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please Insert Married Date");
+            }
         }
 
-        userPerson.setMaritalStatus(MaritalStatus.valueOf(request.getMaritalStatus()));
+        if (Boolean.TRUE.equals(request.getIsPassedAway())) {
+            if (request.getPassedAwayDate() != null) {
+                userPerson.setPassedAwayDate(request.getPassedAwayDate());
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please Insert Passed Away Date");
+            }
+        }
 
         userPersonRepository.save(userPerson);
     }
@@ -109,16 +121,27 @@ public class UserPersonServiceImpl implements UserPersonService {
         UserPerson userPerson = getEntityById(request.getId());
         validateVersion(userPerson.getVersion(), request.getVersion());
 
-        if (!userPerson.getNik().equalsIgnoreCase(request.getNik())) {
-            validateBkNotExists(request.getNik());
-        }
-
         BeanUtils.copyProperties(request, userPerson);
 
-        if (StringUtils.isNotBlank(request.getParentId())) {
-            userPerson.setParent(getEntityById(request.getParentId()));
-        } else {
-            userPerson.setParent(null);
+        User user = userService.getEntityById(request.getUserId());
+        userPerson.setUser(user);
+        userPerson.setGender(request.getGender());
+        userPerson.setMaritalStatus(request.getMaritalStatus());
+
+        if (MaritalStatus.MARRIED.equals(request.getMaritalStatus())) {
+            if (request.getMarriedDate() != null) {
+                userPerson.setMarriedDate(request.getMarriedDate());
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please Insert Married Date");
+            }
+        }
+
+        if (Boolean.TRUE.equals(request.getIsPassedAway())) {
+            if (request.getPassedAwayDate() != null) {
+                userPerson.setPassedAwayDate(request.getPassedAwayDate());
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please Insert Passed Away Date");
+            }
         }
     }
 
@@ -140,16 +163,11 @@ public class UserPersonServiceImpl implements UserPersonService {
     private UserPersonResponse mappingUserPersonDto(UserPerson userPerson) {
         UserPersonResponse response = new UserPersonResponse();
         BeanUtils.copyProperties(userPerson, response);
+        response.setMaritalStatus(userPerson.getMaritalStatus());
+        response.setGender(userPerson.getGender());
 
-        if (Objects.nonNull(userPerson.getParent())) {
-            User parent = userPerson.getParent().getUser();
-            response.setParentId(parent.getId());
-            response.setParentUid(parent.getUid());
-
-            UserPerson parentProfile = userPersonRepository.findByParentId(parent.getId());
-            response.setParentProfileId(parentProfile.getId());
-            response.setParentFullName(parentProfile.getFullName());
-        }
+        UserResponse userResponse = userService.getById(userPerson.getUser().getId());
+        response.setUserResponse(userResponse);
 
         return response;
     }

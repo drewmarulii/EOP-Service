@@ -1,5 +1,7 @@
 package com.eop.baseservice.common.dto.user.request;
 
+import com.eop.baseservice.common.constant.Gender;
+import com.eop.baseservice.common.constant.MaritalStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,14 +13,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CreateUserPersonRequest {
 
-    private String nik;
     private String fullName;
-    private String address;
-    private String mobilePhone;
-    private String email;
     private String placeOfBirth;
     private LocalDate dateOfBirth;
-    private String maritalStatus;
-    private String parentId;
+    private Gender gender;
+    private String address;
+    private MaritalStatus maritalStatus;
+    private LocalDate marriedDate;
+    private String mobilePhone;
+    private String email;
+    private Boolean isFamilyLeader;
+    private Boolean isPassedAway;
+    private LocalDate passedAwayDate;
+    private String profilePicture;
 
 }

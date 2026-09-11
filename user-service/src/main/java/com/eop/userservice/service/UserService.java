@@ -2,6 +2,7 @@ package com.eop.userservice.service;
 
 import com.eop.baseservice.common.constant.UserStatus;
 import com.eop.baseservice.common.dto.user.request.CreateUserRequest;
+import com.eop.baseservice.common.dto.user.request.UpdateUserPasswordRequest;
 import com.eop.baseservice.common.dto.user.request.UpdateUserRequest;
 import com.eop.baseservice.common.response.PagingRequest;
 import com.eop.baseservice.common.dto.user.response.UserResponse;
@@ -14,9 +15,9 @@ public interface UserService {
 
     void validateIdExists(String id);
 
-    void validateBkNotExists(String uid);
+    void validateBkNotExists(String username);
 
-    void validateBkNotChange(String oldUid, String currUid);
+    void validateBkNotChange(String oldUsername, String currUsername);
 
     void validateVersion(Long oldVersion, Long currVersion);
 
@@ -29,6 +30,8 @@ public interface UserService {
     void create(CreateUserRequest request);
 
     void update(UpdateUserRequest request);
+
+    void updatePassword(UpdateUserPasswordRequest request);
 
     void delete(String id);
 

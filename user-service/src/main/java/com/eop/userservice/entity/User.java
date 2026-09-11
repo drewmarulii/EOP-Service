@@ -3,30 +3,35 @@ package com.eop.userservice.entity;
 import com.eop.baseservice.common.constant.UserRole;
 import com.eop.baseservice.common.constant.UserStatus;
 import com.eop.baseservice.entity.BaseEntity;
+import com.eop.baseservice.entity.MasterEntity;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.ZonedDateTime;
+import java.util.Map;
 
 @Getter
 @Setter
 @Accessors(chain = true)
 @Entity
-@Table(name = "cor_users")
+@Table(name = "users")
 @Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE cor_users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? AND version = ?")
+@SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? AND version = ?")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity {
+@TypeDef(name = "json", typeClass = JsonType.class)
+public class User extends MasterEntity {
 
-    @Column(name = "uid", nullable = false)
-    private String uid;
+    @Column(name = "username", nullable = false)
+    private String username;
 
     @Column(name = "password", nullable = false)
     private String password;

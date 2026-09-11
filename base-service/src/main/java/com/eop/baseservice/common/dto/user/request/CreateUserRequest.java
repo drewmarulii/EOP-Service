@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 public class CreateUserRequest {
 
     @NotBlank
-    private String uid;
+    private String username;
 
     @NotBlank
     private String password;

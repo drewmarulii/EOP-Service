@@ -11,16 +11,20 @@ public class SecurityUtils {
     private static String getUserCred() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof String) {
-            return (String) authentication.getPrincipal();
+            String principal =(String) authentication.getPrincipal();
+            return principal;
         }
         return null;
     }
 
     public static String getUserSpeficicDetail(String type) {
+        String userCred = getUserCred();
         if (USER_ID.equalsIgnoreCase(type)) {
-            return getUserCred() != null ? getUserCred().split("|")[0] : null;
+            String userId = userCred != null ? userCred.split("\\|")[0] : null;
+            return userId;
         } else if (USER_ROLE.equalsIgnoreCase(type)) {
-            return getUserCred() != null ? getUserCred().split("|")[1] : null;
+            String userRole = userCred != null ? userCred.split("\\|")[1] : null;
+            return userRole;
         }
         return null;
     }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MyInfoResponse {
 
-    private String uid;
+    private String username;
     private String userRole;
 
 }

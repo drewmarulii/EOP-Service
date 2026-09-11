@@ -1,5 +1,7 @@
 package com.eop.baseservice.common.dto.user.response;
 
+import com.eop.baseservice.common.constant.Gender;
+import com.eop.baseservice.common.constant.MaritalStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,18 +15,20 @@ import java.time.ZonedDateTime;
 public class UserPersonResponse {
 
     private String id;
-    private String nik;
     private String fullName;
-    private String address;
-    private String mobilePhone;
-    private String email;
     private String placeOfBirth;
     private LocalDate dateOfBirth;
-    private String maritalStatus;
-    private String parentId;
-    private String parentUid;
-    private String parentProfileId;
-    private String parentFullName;
-    private Long version;
+    private Gender gender;
+    private String address;
+    private MaritalStatus maritalStatus;
+    private LocalDate marriedDate;
+    private String mobilePhone;
+    private String email;
+    private Boolean isFamilyLeader;
+    private Boolean isPassedAway;
+    private LocalDate passedAwayDate;
+    private String profilePicture;
+
+    private UserResponse userResponse;
 
 }
