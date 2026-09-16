@@ -11,15 +11,11 @@ import java.util.List;
 
 public interface WorshipTypeService {
 
-    void validateIdExists(String id);
-
     void validateBkNotExists(String code);
 
-    void validateVersion(Long oldVersion, Long currVersion);
+    WorshipTypeResponse getById(String id);
 
     WorshipType getEntityById(String id);
-
-    WorshipTypeResponse getById(String id);
 
     Page<WorshipTypeResponse> getAllByPagingAndSearch(PagingRequest pagingRequest, String inquiry, Boolean isActive);
 
