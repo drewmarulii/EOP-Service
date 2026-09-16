@@ -29,6 +29,9 @@ public class WebResponse<T> {
     @JsonProperty("paging")
     private PagingResponse paging;
 
+    @JsonProperty("message")
+    private String message;
+
     @JsonProperty("errors")
     private Map<String, List<String>> errors;
 
@@ -37,12 +40,12 @@ public class WebResponse<T> {
 
     public static <T> WebResponse<T> failure(
             Integer code,
-            Map<String, List<String>> errors) {
+            String error) {
 
         return WebResponse.<T>builder()
                 .code(code)
                 .status("FAILED")
-                .errors(errors)
+                .message(error)
                 .build();
     }
 }

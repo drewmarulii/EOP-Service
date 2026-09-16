@@ -66,7 +66,7 @@ public class ResponseHelper {
                 .status(status.name())
                 .paging(paging)
                 .column(column)
-                .data(data)
+                .message((String) data)
                 .errors(errors)
                 .metadata(metadata)
                 .build();

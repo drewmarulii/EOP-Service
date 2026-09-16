@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
             .status(ex.getStatus())
             .body(WebResponse.failure(
                     ex.getStatus().value(),
-                    errors
+                    ex.getReason()
             ));
     }
 }
