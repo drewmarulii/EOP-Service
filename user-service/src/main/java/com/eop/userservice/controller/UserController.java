@@ -2,6 +2,7 @@ package com.eop.userservice.controller;
 
 import com.eop.baseservice.common.constant.UserStatus;
 import com.eop.baseservice.common.dto.user.request.CreateUserRequest;
+import com.eop.baseservice.common.dto.user.request.UpdateUserPasswordRequest;
 import com.eop.baseservice.common.dto.user.request.UpdateUserRequest;
 import com.eop.baseservice.common.response.PagingRequest;
 import com.eop.baseservice.common.response.ResponseHelper;
@@ -46,6 +47,18 @@ public class UserController {
         return ResponseEntity.ok(ResponseHelper.ok("User has been updated successfully"));
     }
 
+    @PutMapping(value = "/change-pwd", consumes = MediaType.APPLICATION_JSON_VALUE , produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WebResponse<String>> updatePassword(@RequestBody UpdateUserPasswordRequest request) {
+        userService.updatePassword(request);
+        return ResponseEntity.ok(ResponseHelper.ok("User password has been updated successfully"));
+    }
+
+    @PutMapping(value = "/change-sts", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WebResponse<String>> changeStatus(@RequestBody List<String> ids) {
+        userService.changeStatus(ids, UserStatus.ACTIVE);
+        return ResponseEntity.ok(ResponseHelper.ok("User status has been updated successfully"));
+    }
+
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WebResponse<String>> deleteById(@PathVariable String id) {
         userService.delete(id);
@@ -57,11 +70,5 @@ public class UserController {
     public ResponseEntity<WebResponse<String>> deleteByIds(@RequestBody List<String> ids) {
         userService.delete(ids);
         return ResponseEntity.ok(ResponseHelper.ok("Users has been deleted"));
-    }
-
-    @PutMapping(value = "/approved", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WebResponse<String>> changeStatus(@RequestBody List<String> ids) {
-        userService.changeStatus(ids, UserStatus.ACTIVE);
-        return ResponseEntity.ok(ResponseHelper.ok("User has been updated successfully"));
     }
 }

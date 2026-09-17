@@ -37,6 +37,7 @@ public class ScheduleWorship extends BaseEntity {
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
+    // Program Name, [ID?, ParticipantName!]
     @Type(type = "json")
     @Column(name = "worthip_liturgy", columnDefinition = "jsonb")
     private Map<String, Map<String, String>> worshipLiturgy;

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -13,15 +14,12 @@ import java.util.List;
 public class WorshipTypeResponse {
 
     private String id;
-    private String liturgyGroupId;
-    private String liturgyGroupName;
-    private String triwulan;
-    private String year;
-    private String title;
+    private String code;
+    private String name;
     private String description;
-    private LocalDateTime eventStartTime;
-    private LocalDateTime eventEndTime;
-    private String eventType;
+    private String worship;
+    private Map<String, String> liturgyTemplate;
     private Long version;
+    private Boolean isActive;
 
 }
