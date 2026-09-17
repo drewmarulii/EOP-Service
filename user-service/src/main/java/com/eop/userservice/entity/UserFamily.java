@@ -1,5 +1,6 @@
 package com.eop.userservice.entity;
 
+import com.eop.baseservice.common.constant.FamilyRelationship;
 import com.eop.baseservice.entity.MasterEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +25,14 @@ public class UserFamily extends MasterEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leader_user_id", referencedColumnName = "id", nullable = false)
-    private User leaderUserId;
+    private UserPerson leaderUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_user_id", referencedColumnName = "id", nullable = false)
-    private User memberUserId;
+    private UserPerson memberUser;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "relationship", nullable = false)
+    private FamilyRelationship relationship;
 
 }
