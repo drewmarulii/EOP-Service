@@ -161,13 +161,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validatePassword(String userPassword, String currPassword, String newPassword, String confPassword) {
-        boolean match = passwordEncoder.matches(userPassword, currPassword);
+        boolean match = passwordEncoder.matches(currPassword, userPassword);
 
         if (match) {
-            String newHashedPassword = passwordEncoder.encode(newPassword);
             String confHashedPassword = passwordEncoder.encode(confPassword);
 
-            if (!passwordEncoder.matches(newHashedPassword, confHashedPassword)) {
+            if (!passwordEncoder.matches(newPassword, confHashedPassword)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password not matched");
             }
         } else {
