@@ -14,7 +14,7 @@ public class ResponseHelper {
     }
 
     public static <T> WebResponse<T> ok(T data) {
-        return ResponseHelper.status(HttpStatus.OK, null, data, null, null, null);
+        return ResponseHelper.status(HttpStatus.OK, null, data, null, null, null, null);
     }
 
     public static <T> WebResponse<T> ok(T data, List<String> warning) {
@@ -25,6 +25,7 @@ public class ResponseHelper {
                 HttpStatus.OK,
                 null,
                 data,
+                null,
                 null,
                 null,
                 meta
@@ -44,7 +45,7 @@ public class ResponseHelper {
     }
 
     public static <T> WebResponse<T> badRequest(Map<String, List<String>> errors) {
-        return ResponseHelper.status(HttpStatus.BAD_REQUEST, null, null, null, errors, null);
+        return ResponseHelper.status(HttpStatus.BAD_REQUEST, null, null, null, null, errors, null);
     }
 
     public static <T> WebResponse<T> status(HttpStatus status) {
@@ -56,17 +57,18 @@ public class ResponseHelper {
     }
 
     public static <T> WebResponse<T> status(HttpStatus status, List<CustomColumn> column, T data, PagingResponse paging) {
-        return ResponseHelper.status(status, column, data, paging, null, null);
+        return ResponseHelper.status(status, column, data, null, paging, null, null);
     }
 
     public static <T> WebResponse<T> status(HttpStatus status, List<CustomColumn> column,
-        T data, PagingResponse paging, Map<String, List<String>> errors, Map<String, Object> metadata) {
+        T data, String message, PagingResponse paging, Map<String, List<String>> errors, Map<String, Object> metadata) {
         return WebResponse.<T>builder()
                 .code(status.value())
                 .status(status.name())
                 .paging(paging)
                 .column(column)
-                .message((String) data)
+                .message(message)
+                .data(data)
                 .errors(errors)
                 .metadata(metadata)
                 .build();

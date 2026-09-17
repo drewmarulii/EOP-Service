@@ -26,9 +26,9 @@ public class WorshipTypeController {
         return ResponseEntity.ok(ResponseHelper.ok(worshipTypeService.getById(id)));
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WebResponse<List<WorshipTypeResponse>>> getAllByPagingAndSearch(
-            PagingRequest pagingRequest, @RequestParam(required = false) String inquiry,  @RequestParam(name = "isActive") Boolean isActive) {
+            PagingRequest pagingRequest, @RequestParam(required = false) String inquiry,  @RequestParam(name = "isActive", required = false) Boolean isActive) {
         return ResponseEntity.ok(ResponseHelper.ok(pagingRequest, worshipTypeService.getAllByPagingAndSearch(pagingRequest, inquiry, isActive)));
     }
 

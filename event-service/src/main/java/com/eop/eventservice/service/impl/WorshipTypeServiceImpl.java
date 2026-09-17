@@ -127,6 +127,8 @@ public class WorshipTypeServiceImpl extends ValidationService<WorshipType, Strin
     private WorshipTypeResponse mappingToDto(WorshipType worshipType) {
         WorshipTypeResponse response = new WorshipTypeResponse();
         BeanUtils.copyProperties(worshipType, response);
+        response.setWorship(String.valueOf(worshipType.getWorship()));
+        response.setLiturgyTemplate(worshipType.getLiturgyTemplate());
         return response;
     }
 
